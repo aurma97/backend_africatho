@@ -14,22 +14,31 @@ It's a kind of categories to regroup songbooks in a time.
 
 Ex: Répertoires officiels, saison musicale 2023 - 2024...
 
-### Events
+### Category
 It will regroup type of event: concert, mass, mariage...
+
+### Events
+It will contain the name of the event and the period, like : 
+- name: Marseille
+- musical_season: `musical_season`
+- from: 26/01/2024
+- to: 28/01/2024
 
 ### Songbooks
 It will content the history of event, rattached to musical season.
 
 Ex: Marseille 26-28 janvier 2024
 
+### Stages
+It concerns stay of the choir members, like the XLS file currently used.
 ## 2. Datamodel in SQL
 
-**partitions_info** `SQL`
+**partition_info** `SQL`
 - title, `string`
 - link, `string`
 - partitions_detail, `partitions_detail[]`
 
-**partitions_detail** `SQL`
+**partition_detail** `SQL`
 - soprano, `string`
 - alto, `string`
 - tenor, `string`
@@ -39,32 +48,60 @@ Ex: Marseille 26-28 janvier 2024
 - comment, `string`
 - partition_id, `string`    
 
-**musical_seasons** `SQL`
+**musical_season** `SQL`
 - name, `string`
 
 **event** `SQL`
 - name, `string`
+- city, `string`
+- musical_season, `musical_season`
+- from: `Date`,
+- to: `Date`
+- excluded_persons: `User[]`
+
+**category** `SQL`
+- name, `string`
 
 **songbooks** `SQL`
-- title, `string`
+- event, `Event`
 - description, `string`,
 - songbooks_detail, `songbooks_detail[]`
 
-**songbooks_detail**
-- category, `Event`
+**songbook_detail** `SQL`
+- category, `Category`
+- location, `string`
 - partitions, `partitions_list[]`
 - songbook_id, `string`
 
-**users**
+**transport** `SQL` [`train`, `carpooling`, `bus`, `airplane`, `personal_car`, `other`]
+- name, `string` 
+
+**stage** `SQL`
+- event: `Event`
+- traveler_origin: `string`
+- traveler_user_id: `string`
+- traveler_name?: `string`
+- traveler_phone?: `string`
+- traveler_type: `traveler_type`, by default `choir_member` 
+- arrival_location, `string`
+- arrival_datetime, `string`
+- arrival_transport, `transport`
+- accommodation_type, `string`
+- departure_location, `string`
+- departure_datetime, `string`
+- departure_transport, `transport`
+
+**user** `SQL`
 - username, `string`
 - password, `string`
 - email, `string`
 - first_name, `string`
 - last_name, `string`
 - birthdate, `string`
-- role, `role`
+- role, `Role`
+- phone, `string`
 
-**roles**
+**role** `SQL` [`admin`, `choir_member`, `companion`]
 - name, `string`
 - access, `string`
 - TBD...
